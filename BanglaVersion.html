@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>যাত্রা — স্থানীয় পরিবহন চালক খুঁজুন</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Hind Siliguri", sans-serif;
+        margin: 0;
+        background: #f5f5f5;
+        color: #222;
+      }
+
+      /* header */
+
+      header {
+        background: #0c3b4a;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .count {
+        font-size: 13px;
+        opacity: 0.8;
+      }
+
+      /* hero */
+
+      .hero {
+        background: #155068;
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+
+      .hero p {
+        opacity: 0.8;
+        margin-bottom: 30px;
+      }
+
+      .search {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .search input {
+        padding: 10px;
+        width: 250px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      .search button {
+        padding: 10px 20px;
+        background: #f5a623;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* tabs */
+
+      .tabs {
+        background: white;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        cursor: pointer;
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: #eee;
+        font-size: 14px;
+      }
+
+      .tab.active {
+        background: #f5a623;
+        color: black;
+      }
+
+      /* drivers */
+
+      main {
+        max-width: 1000px;
+        margin: auto;
+        padding: 40px 20px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .name {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .vehicle {
+        font-size: 13px;
+        background: #eee;
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+      }
+
+      .detail {
+        font-size: 14px;
+        margin: 5px 0;
+      }
+
+      .phone {
+        font-weight: 600;
+      }
+
+      .call {
+        margin-top: 15px;
+        display: block;
+        text-align: center;
+        background: #0c3b4a;
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+
+      /* footer */
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background: #0c3b4a;
+        color: white;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">যাত্রা</div>
+      <div class="count" id="count"></div>
+    </header>
+
+    <section class="hero">
+      <h1>স্থানীয় পরিবহন চালক খুঁজুন</h1>
+
+      <p>
+        রিকশা, সিএনজি, অটো, অ্যাম্বুলেন্স ও গাড়ির চালকদের খুঁজুন এবং সরাসরি ফোন
+        করুন
+      </p>
+
+      <div class="search">
+        <input
+          type="text"
+          id="search"
+          placeholder="চালকের নাম বা এলাকা লিখুন"
+        />
+
+        <button onclick="render()">খুঁজুন</button>
+      </div>
+    </section>
+
+    <div class="tabs" id="tabs"></div>
+
+    <main>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <footer>যাত্রা — বাংলাদেশের স্থানীয় পরিবহন সেবা</footer>
+
+    <script>
+      /* driver data */
+
+      const drivers = [
+        {
+          name: "রহিম উদ্দিন",
+          vehicle: "CNG",
+          location: "ঢাকা মিরপুর",
+          phone: "01711000001",
+        },
+
+        {
+          name: "করিম মিয়া",
+          vehicle: "Rickshaw",
+          location: "গাজীপুর",
+          phone: "01811000002",
+        },
+
+        {
+          name: "জামাল হোসেন",
+          vehicle: "Auto",
+          location: "ঢাকা মহাখালী",
+          phone: "01911000003",
+        },
+
+        {
+          name: "সালাম শেখ",
+          vehicle: "Car",
+          location: "ঢাকা গুলশান",
+          phone: "01611000004",
+        },
+
+        {
+          name: "ফারুক আহমেদ",
+          vehicle: "Ambulance",
+          location: "ঢাকা ধানমন্ডি",
+          phone: "01511000005",
+        },
+
+        {
+          name: "নিজাম আলী",
+          vehicle: "CNG",
+          location: "চট্টগ্রাম",
+          phone: "01711000006",
+        },
+
+        {
+          name: "সাব্বির রহমান",
+          vehicle: "Rickshaw",
+          location: "ঢাকা বনানী",
+          phone: "01811000007",
+        },
+
+        {
+          name: "রফিক ইসলাম",
+          vehicle: "Auto",
+          location: "সিলেট",
+          phone: "01911000008",
+        },
+      ];
+
+      const vehicles = [
+        { key: "All", label: "সব" },
+        { key: "Rickshaw", label: "রিকশা" },
+        { key: "Auto", label: "অটো" },
+        { key: "CNG", label: "সিএনজি" },
+        { key: "Ambulance", label: "অ্যাম্বুলেন্স" },
+        { key: "Car", label: "গাড়ি" },
+      ];
+
+      let active = "All";
+
+      /* build tabs */
+
+      function buildTabs() {
+        const t = document.getElementById("tabs");
+
+        t.innerHTML = vehicles
+          .map(
+            (v) => `
+
+<div class="tab ${v.key === active ? "active" : ""}" onclick="setVehicle('${v.key}')">
+
+${v.label}
+
+</div>
+
+`,
+          )
+          .join("");
+      }
+
+      function setVehicle(v) {
+        active = v;
+
+        buildTabs();
+
+        render();
+      }
+
+      /* render drivers */
+
+      function render() {
+        const q = document.getElementById("search").value.toLowerCase();
+
+        const list = drivers.filter((d) => {
+          const vehicleMatch = active === "All" || d.vehicle === active;
+
+          const searchMatch =
+            d.name.toLowerCase().includes(q) ||
+            d.location.toLowerCase().includes(q);
+
+          return vehicleMatch && searchMatch;
+        });
+
+        document.getElementById("count").innerText =
+          `মোট ${list.length} জন চালক`;
+
+        const grid = document.getElementById("grid");
+
+        if (!list.length) {
+          grid.innerHTML = "<p>কোনো চালক পাওয়া যায়নি</p>";
+
+          return;
+        }
+
+        grid.innerHTML = list
+          .map(
+            (d) => `
+
+<div class="card">
+
+<div class="name">${d.name}</div>
+
+<div class="vehicle">${d.vehicle}</div>
+
+<div class="detail">📍 ${d.location}</div>
+
+<div class="detail phone">📞 ${d.phone}</div>
+
+<a class="call" href="tel:${d.phone}">কল করুন</a>
+
+</div>
+
+`,
+          )
+          .join("");
+      }
+
+      buildTabs();
+
+      render();
+    </script>
+  </body>
+</html>
